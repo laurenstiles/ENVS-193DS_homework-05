@@ -1,0 +1,144 @@
+---
+title: "ENVS 193DS Homework 5"
+author: "Lauren Stiles"
+format:
+  html:
+    toc: true
+    toc-location: left
+    code-fold: true
+    theme: yeti
+execute: 
+  message: false
+  warning: false 
+---
+
+```{r libraries}
+library(tidyverse)
+library(here)
+library(janitor)
+library(ggeffects)
+library(performance)
+library(naniar) # or equivalent
+library(flextable) # or equivalent
+library(car)
+library(broom)
+
+# would be nice to have
+library(corrplot)
+library(AICcmodavg)
+library(GGally)
+```
+
+Read in data: 
+
+```{r reading-data}
+plant <- read_csv(here("data", "knb-lter-hfr.109.18 (1)", "hf109-01-sarracenia.csv")) |>
+         #make column names cleaner
+         clean_names() |>
+         select(totmass, species, feedlevel, sla, chlorophyll, amass, num_lvs, num_phylls)
+
+```
+
+Visualize the missing data : 
+
+```{r missing-data-visualization}
+gg_miss_var(plant)
+#lots of chlorophyll, amass, sla, num_phulls, num_lvs 
+#totmass, species, feedlevel don't have missing data 
+#we are interested in looking how factors affect totmass 
+#we do not know how these will affect, so we will drop them 
+
+```
+
+Subsetting data by dropping NAs: 
+
+```{r subset-drop-NA}
+#get rid of the missing values from the above visualization 
+plant_subset <- plant|> 
+                drop_na(sla, chlorophyll, amass, num_lvs, num_phylls)
+#103 observations compared to the original 120 
+
+```
+
+Create a correlation plot: 
+
+```{r correlation-plot}
+#plot to visually represent pearson's r between different variables in the dataset 
+
+#calculate pearson's r for numerical predictors only 
+plant_cor <- plant_subset |> 
+            #select only the numerical predictor variables 
+             select(feedlevel:num_phylls) |> 
+            #cor calculates various correlation metrics, pearsons, kendall, spearman --> we will use pearson 
+             cor(method = "pearson") #output is a correlation matrix, diagonal = variables compared to themselves, above and below is correlation with another variable 
+
+
+#creating a correlation plot 
+corrplot(plant_cor, #size of circles represents strength of correlation, colors represent the direction ??
+        #change the shape of what is in the cells 
+        method = "ellipse", #right and left pointing represents whether relationship is positive or negative
+        #show coefficients and choose color for them 
+        addCoef.col = "black")
+        
+    
+  
+```
+
+Create a plot of each variable compared against the other (does not calc correlation, just a "pairs plot")
+
+```{r pairs-plot}
+plant_subset |> 
+      #select only the numerical predictor variables 
+       select(species:num_phylls) |> 
+       ggpairs() #lots of plots, pearson's coefficients 
+#this is usually part of exploratory analysis 
+#gives a sense of how the variables are related to each other 
+#USE ACTIVE VOICE WHEN EXPLANING 
+```
+
+Starting regression here" 
+
+(example writing) To determine the relationships between numerical variables in our dataset, we calculated pearson's r and visually represented correlation using a correlation plot. 
+
+(example) To determine how species and physiological characteristics predict biomass, we fit multiple linear models. 
+
+```{r null-and-full-model}
+#write null model -- specify using "1" as predictor 
+null <- lm(totmass ~ 1, data = plant_subset)
+#specify full model with everything in it 
+full <- lm(totmass ~ species + feedlevel + sla + chlorophyll + amass + num_lvs, data = plant_subset)
+
+```
+
+We visually assessed normality and homoskedasticity of residuals using diagnostic plots for the full model:
+```{r full-diagnostics}
+par(mfrow = c(2,2))
+plot(full)
+#they look normal BUT residuals clumped at the beginning and random at the end -- probs heteroskedastic
+#kind of borderline...
+#we can do statistical test to check normality and homoskedasticity 
+
+
+```
+WE also tested for normality using the Shapiro-Wilk test (null = variable of interest (i.e. the residuals) are normally distributed) 
+and WE tested for homoskedasticity using the Breusch-Pagan test (null = variable of interest (residuals) has constant variance) . 
+```{r}
+#performance package
+check_normality(full) #warning -- non-normality of residuals --> this is typical for a large dataset 
+#but it looks normal on the diagnostics 
+
+check_heteroscedasticity(full) #seems like residuals are heteroskedastic, but we knew this 
+
+#THE ASSUMPTIONS OF LINEAR REGRESSIONS ARE NOT MET 
+#ONE OF THE BEST WAYS TO MAKE IT WORK IS TO TRANSFORM THE RESPONSE VARIABLE (ln, log, ect) --> idea is that the residuals will be transformed to be normal 
+```
+```{r}
+full_log <- lm(log(totmass) ~ species + feedlevel + sla + chlorophyll + amass + num_lvs, data = plant_subset) #hope that residuals will now be normally dist
+
+par(mfrow = c(2,2))
+plot(full_log)
+check_normality(full_log)
+check_heteroscedasticity(full_log)
+#all interpretation will be based on transformed response, have been natural log transformed 
+```
+
