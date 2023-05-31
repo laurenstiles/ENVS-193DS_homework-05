@@ -23,6 +23,7 @@ library(naniar) # or equivalent
 library(flextable) # or equivalent
 library(car)
 library(broom)
+library(MuMIn)
 
 # would be nice to have
 library(corrplot)
@@ -48,7 +49,7 @@ a. A variety of different species of Sarracenia were used in this study. Their A
 b. We used open access data from the EDI Portal in an attempt to understand the overarching question: How do Sarracenia characteristics predict biomass? We selected the  following variables for the analysis:  chlorophyll (chlorophyll a + b content (mg/g) of youngest fully-expanded leaf produced by the plant), amass (mass-based light-saturated photosynthetic rate of youngest leaf (units: nmol CO2 • g-1 • s-1), sla (specific Leaf Area (cm2/g) of youngest fully-expanded leaf produced by the plant), num_phylls (number of phyllodes produced by each plant), num_lvs (total number of pitchers and phyllodes produced by each plant), totmass (total above- and below-ground plant biomass), species (species of pitcher plant used -- all Sarracenia), and feedlevel (grams of ground hymenoptera fed per week). We used a linear regression model to analyze the relationship between the above variables and biomass. 
 
 
-c. Visualize the missing data (see figure below): We are interested in looking at how the factors in each column affect total mass of the plants, and we are not yet sure how they will do so. Therefore, we drop the NA values to get the most accurate picture of their relationships. 
+c. Visualize the missing data (see figure below): We are interested in looking at how the factors in each column affect total mass of the plants, and we are not yet sure how they will do so. We are not sure how the data was collected and cannot rectify the NAs by finding missing data in old records. Therefore, we drop the NA values to get the most accurate picture of their relationships. 
 
 ```{r missing-data-visualization}
 missing_dat <- gg_miss_var(plant) + 
@@ -88,6 +89,8 @@ plant_cor <- plant_subset |>
 
 
 #creating a correlation plot 
+#diagonal is correlation between variable and itself -- can edit this according to an 
+#above and below diagonal are identical 
 cor_plot <- corrplot(plant_cor, 
         #change the shape of what is in the cells 
         method = "ellipse", #right and left pointing represents whether relationship is positive or negative
@@ -112,6 +115,11 @@ plant_subset |>
 #gives a sense of how the variables are related to each other 
 #USE ACTIVE VOICE WHEN EXPLANING 
 
+#see diagonal, top and bottom 
+#mostly, basic scatterplpot between two variables 
+#good way to get a visual first sense if there is a relationship between the two variables -- "sit and look at it" 
+
+
 ```
 
 # Starting regression here 
@@ -120,12 +128,12 @@ plant_subset |>
 
 (example) To determine how species and physiological characteristics predict biomass, we fit multiple linear models. 
 
-f. The null model establishes predicted values by chance, rather than based on the variables we are interested in. In contrast, the full model establishes predicted values based off of each of the different variables we are interested in. 
-```{r null-and-full-model}
+f. The null model establishes predicted values by chance, rather than based on the variables we are interested in (there are not predictors in the model). In contrast, the full model establishes predicted values based off of each of the different variables we are interested in (has the response variable and all of the predictors). 
+```{r null-and-full-models}
 #write null model -- specify using "1" as predictor 
 null <- lm(totmass ~ 1, data = plant_subset)
 #specify full model with everything in it 
-full <- lm(totmass ~ species + feedlevel + sla + chlorophyll + amass + num_lvs, data = plant_subset)
+full <- lm(totmass ~ species + feedlevel + sla + chlorophyll + amass + num_lvs + num_phylls, data = plant_subset)
 
 ```
 
@@ -150,21 +158,149 @@ check_heteroscedasticity(full) #seems like residuals are heteroskedastic, but we
 #THE ASSUMPTIONS OF LINEAR REGRESSIONS ARE NOT MET 
 #ONE OF THE BEST WAYS TO MAKE IT WORK IS TO TRANSFORM THE RESPONSE VARIABLE (ln, log, ect) --> idea is that the residuals will be transformed to be normal 
 ```
-h. Since the full model did not show normally distributed and homoskedastic residuals, we tried transforming the data using log() in hope that the residuals will now meet these assumptions. 
-```{r}
-full_log <- lm(log(totmass) ~ species + feedlevel + sla + chlorophyll + amass + num_lvs, data = plant_subset) #hope that residuals will now be normally dist
+h. Since the full model did not show normally distributed and homoskedastic residuals, we tried transforming the data using log() in hope that the residuals will now meet these assumptions. In this case, we log transformed the response variable. 
+#back transform this when reporting results....all estimates of slopes will be on a log scale but easier to talk about if you back transform -- exponentiate whatever the slope is 
+```{r model-logs}
+null_log <- lm(log(totmass) ~ 1, data = plant_subset)
+
+full_log <- lm(log(totmass) ~ species + feedlevel + sla + chlorophyll + amass + num_lvs + num_phylls, data = plant_subset) #hope that residuals will now be normally dist
 
 par(mfrow = c(2,2))
-plot(full_log)
-check_normality(full_log)
-check_heteroscedasticity(full_log)
+plot(full_log) #plots look much better now 
+
+check_normality(full_log) #normal 
+check_heteroscedasticity(full_log) #homoskedastic
 #all interpretation will be based on transformed response, have been natural log transformed 
 ```
+
+Evaluates multicollinearity: 
+
+```{r calculate-vif}
+car::vif(full_log) #why not showing num_phylls 
+#transformation with GVIF and DF to make value that can be compared 
+#does not seem like any are inflating the R2 because all of the values are lower than 1 
+
+#we evaluated multicollinearity by calculatting generalized variacne inflcation factor and determined that....this model did not display aspects of collinearity based on the GVIF plot  
+
+```
+Try some more models 
+
+addressing the question: what set of predictor variables best explains the response? 
+```{r}
+#have to make biological decisions about which predictors to include in the model 
+#hw: to choose two more models and explain bio why those two were chosen in the model 
+#go through same steps as you would for all models 
+
+model2_log <- lm(log(totmass) ~ species, data = plant_subset)
+``` 
+
+check assumptions for model2; 
+```{r}
+par(mfrow = c(2,2))
+plot(model2_log)
+
+check_normality(model2_log)
+check_heteroskedasticity(model2_log)
+#new model does not mean anything if it does not fit the assumptions of linear regression 
+#need to check this before you start doing anything else 
+```
+
+Compare models using Akaike's Information Criterion(AIC) values: 
+```{r}
+AICc(full_log)
+AICc(model2_log)
+AICc(null_log)
+#get corrected AIC values 
+#sort of what you would expect 
+#looking at diff in AIC values amongst logs 
+#want least complex model that best predicts response 
+# Full log has the lowest AIC 
+#SOMETIMES all of the predictors has the best value instead of the subsets, still need to try subsets -- hw formulate models that make bio sense 
+
+MuMIn::AICc(full_log, model2_log, null_log)
+MuMIn::model.sel(full_log, model2_log, null_log)#takes into account prob that whatever model you are looking at is the best model 
+
+#WE compared models using AIC and chose the model with the lowest value, which was...
+```
+
+# results
+We found that the _____ model including ___ ____ ___ predictors best predicted ______ (model summary). 
+
+```{r}
+summary(full_log)
+# all estimates on the scale of the log transformed response 
+# can back transform the estimates 
+```
+use ggpredict to backtransform the 
+```{r} 
+#visualizations of model predictions 
+
+
+model_pred <- ggpredict(full_log, terms = "species", back.transform = TRUE)
+#reporting results on the scale of the original variable -- fine, you just have to be transparent about it 
+#could explain by saying "for ease of interpretation" 
+#all based on summary table with standard error of model object 
+model_pred
+#all else held constant (see values under Adjusted for section -- uses mean of the section) you would expect total biomass for each species to be (predicted) and report confidence interval 
+
+#look at this for all that have significant effect 
+
+plot(model_pred, add.data = TRUE) #plot that displays all predictions for species and total mass -- plotted along the original scales 
+#points are model estimates 
+#bars are ... ? 
+#jittered points are the orginal data
+
+plot(ggpredict(full_log, terms = "chlorophyll", back.transform = TRUE), add.data = TRUE) #ribbon is confidence interval around chlorophyll slope estimate 
+#back transformation takes the estimates from summary and calculates the estimate relative to the reference level, calc confidence interval using standard error and t value, then exponentiates all of that 
+#none of the predictors are back transformed 
+
+#when writing results: can say that model with log transformed response variable includes ___ ___ ___ ____. What we found is that there is a sig effect of ___ ___ ___ ____. THEN DECIDE WITH PREDICTOR YOU WANT TO HIGHLIGHT 
+#all else held constant, you would expect these ranges of total mass for each species....
+
+plot(ggpredict(full_log, terms = "feedlevel", back.transform = TRUE), add.data = TRUE)
+
+plot(ggpredict(full_log, terms = "sla", back.transform = TRUE), add.data = TRUE)
+
+#choose which figure represents the main takeaway of model...
+```
+tables 
+```{r}
+summary(full_log)
+
+table <- tidy(full_log, conf.int = TRUE) #conf.int most useful when you have numerical or continuous predictors 
+table #turns whole summary object into a table...
+ #change the p value numbers if they're really small
+#using mutate
+  #change the estimates, standard error, and t -stats to round to...
+
+ #make it into a flextable 
+#flextable() |>
+ #fit it to the viewer 
+#autofit()
+```
+#HW: you do not need to create an ANOVA table 
+#HW can change HTML -- turn it in as the link to html on github repo 
+```{r}
+#different types of ANOVAS
+
+#anova in base r calcs the 
+
+#type 1: you think the order of the variables in the table matters 
+#type2: the order does not matter, but there might be some interaction in the model 
+#type 3: the order matters and so does the interaction in the model 
+```
+
+
 i. Model construction with visual and statistical assumption checks for three
 additional models: 
 
 ```{r}
 #so does this mean i try more model runs with different predictor variables ?? how does this work? 
-
+# akaike information criterion -- look for model with the lowest AIC value 
+ # only values for compare diff versions of a model with diff permutations of the predictor variables 
+ # only meaningful as a relative measure 
+#how to deal with collinearity? when you have multiple predictors that might be correlated with each other 
+  #chlorophyll content correlated with phosphorous content? 
+#variance inflation factor -- looking for any predictor that inflates the predictive capacity of the model --> generally >5 is cause for concern 
 ```
 
