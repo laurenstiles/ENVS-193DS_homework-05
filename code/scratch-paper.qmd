@@ -176,11 +176,11 @@ check_heteroscedasticity(full_log) #homoskedastic
 Evaluates multicollinearity: 
 
 ```{r calculate-vif}
-car::vif(full_log) #why not showing num_phylls 
+car::vif(full_log) 
 #transformation with GVIF and DF to make value that can be compared 
-#does not seem like any are inflating the R2 because all of the values are lower than 1 
+#does not seem like any are inflating the R2 because all of the values are lower than 5?? 
 
-#we evaluated multicollinearity by calculatting generalized variacne inflcation factor and determined that....this model did not display aspects of collinearity based on the GVIF plot  
+#we evaluated multicollinearity by calculatting generalized variance inflcation factor and determined that....this model did not display aspects of collinearity based on the GVIF plot  
 
 ```
 Try some more models 
@@ -248,7 +248,7 @@ model_pred
 plot(model_pred, add.data = TRUE) #plot that displays all predictions for species and total mass -- plotted along the original scales 
 #points are model estimates 
 #bars are ... ? 
-#jittered points are the orginal data
+#jittered points are the original data
 
 plot(ggpredict(full_log, terms = "chlorophyll", back.transform = TRUE), add.data = TRUE) #ribbon is confidence interval around chlorophyll slope estimate 
 #back transformation takes the estimates from summary and calculates the estimate relative to the reference level, calc confidence interval using standard error and t value, then exponentiates all of that 
@@ -302,5 +302,80 @@ additional models:
 #how to deal with collinearity? when you have multiple predictors that might be correlated with each other 
   #chlorophyll content correlated with phosphorous content? 
 #variance inflation factor -- looking for any predictor that inflates the predictive capacity of the model --> generally >5 is cause for concern 
+
+#species + feedlevel + sla + chlorophyll + amass + num_lvs + num_phylls
+
+
+#models 
+#split these up into their own code chunks and paragraphs for the final doc 
+
+#from class ==================
+model2_log <- lm(log(totmass) ~ species, data = plant_subset)
+
+#check assumptions visually 
+par(mfrow = c(2,2))
+plot(model2_log)
+
+#check assumptions statistically 
+check_normality(model2_log)
+check_heteroskedasticity(model2_log)
+
+#leaves model ==========================
+#chose this model because number of leaves covers the number of of pitchers and phyllodes produced by each plant
+#It would make sense that more of these means higher total mass 
+#also if the leaf area of the first leaf grown is higher, would make sense that the biomass would be related because the rest of the leaves would be bigger as well...? 
+#chlorophyll would mean more photosynthesis and more growth 
+
+model3_log <- lm(log(totmass) ~ num_lvs + sla + chlorophyll + feedlevel+ amass + species, data = plant_subset)
+#check assumptions visually 
+#this works: num_lvs + sla + chlorophyll + feedlevel+ amass + species, data = plant_subset
+
+par(mfrow = c(2,2))
+plot(model3_log) 
+
+#check assumptions statistically 
+check_normality(model3_log) #ok so residuals are not looking normal-- what do we do here 
+#but when I added sla it said it was heteroskedastic 
+check_heteroskedasticity(model3_log) 
+
+#photosynthesis and nutrients ===========================
+#amass = photosynthetic rate 
+#chose this model because photosynthetic rate would mean higher biomass production, since biomass production depends on photosynthesis 
+#get nutrients from feed, so it would also make sense that feedlevel might affect growth rate and therefore biomass of sarracenia plants 
+#could include chlorophyll content too because it is the pigment used for photosynthesis, which we already know affects biomass 
+
+model4_log <- lm(log(totmass) ~ amass + chlorophyll + feedlevel, data = plant_subset)
+
+par(mfrow = c(2,2))
+plot(model4_log)
+
+#check assumptions statistically 
+check_normality(model4_log) #ok does not look normal, but the plot looks chill -- not sure what to do here
+check_heteroskedasticity(model4_log)
+
+
+
+
+```
+test hw models: 
+```{r}
+
+AICc(full_log)
+AICc(model2_log)
+AICc(null_log)
+AICc(model3_log) #seems like this is the best one -- nice the num_phylls was redundant i believe 
+AICc(model4_log)
+#get corrected AIC values 
+#sort of what you would expect 
+#looking at diff in AIC values amongst logs 
+#want least complex model that best predicts response 
+# Full log has the lowest AIC 
+#SOMETIMES all of the predictors has the best value instead of the subsets, still need to try subsets -- hw formulate models that make bio sense 
+
+MuMIn::AICc(full_log, model2_log, null_log)
+MuMIn::model.sel(full_log, model2_log, null_log)#takes into account prob that whatever model you are looking at is the best model 
+
+#WE compared models using AIC and chose the model with the lowest value, which was...
+
 ```
 

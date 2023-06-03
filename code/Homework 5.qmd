@@ -1,0 +1,258 @@
+---
+title: "ENVS 193DS Homework 5"
+author: "Lauren Stiles"
+date: 06-06-2023
+format:
+  html:
+    toc: true
+    toc-location: left
+    code-fold: true
+    theme: yeti
+execute: 
+  message: false
+  warning: false 
+---
+
+```{r}
+#load libraries required for homework 
+library(tidyverse)
+library(here)
+library(janitor)
+library(ggeffects)
+library(performance)
+library(naniar) # or equivalent
+library(flextable) # or equivalent
+library(car)
+library(broom)
+library(MuMIn)
+library(corrplot)
+library(AICcmodavg)
+library(GGally)
+```
+Read in data: 
+
+```{r reading-data}
+plant <- read_csv(here("data", "knb-lter-hfr.109.18 (1)", "hf109-01-sarracenia.csv")) |>
+         #make column names cleaner
+         clean_names() |>
+         select(totmass, species, feedlevel, sla, chlorophyll, amass, num_lvs, num_phylls)
+```
+
+
+# 6. INTRODUCTION
+
+Sarracenia, or carnivorous pitcher plants,  are plants with specific anatomy that allows them to trap and digest insects (Adlassnig et al, 2011). These digested insects are important sources of nitrogen and phosphorus for carnivorous plants (Farnsworth & Ellison, 2008). Sarracenia have cone shaped leaves from which it is difficult for an organism to remove itself once it has fallen in (Adlassnig et al, 2011). One interesting fact about Sarracenia is that a specific species called Sarracenia purpurea can be used to treat type 2 diabetes and illnesses like tuberculosis, with the potential to be used as an anti-cancer treatment (Huang et al, 2022). Therefore, many may be interested in Sarracenia research for its potential for development of life-saving drugs. In order to understand the relationships that help or hinder Sarracenia growth, it makes sense to research the morphological, physiological, or taxonomic characteristics that predict its biomass. For example, such research could advance the understanding of how to harness these plants for medicinal properties. In this document, we are addressing the question: How do Sarracenia characteristics predict biomass? The null hypothesis we are testing is that none of the characteristics predict biomass. The alternative hypothesis is that at least one of the variables predicts biomass.
+
+# 7. METHODS 
+a. A variety of different species of Sarracenia were used in this study. Their amass (mass-based light-saturated photosynthetic rate of youngest leaf) and above ground size were measured before beginning treatements. Large species were fed 0-0.10 g of finely ground wasps, intermediate sized species were fed 0-0.5 g, and small species were fed 0-0.25 g. Two plants of each species were assigned to one of these feeding levels and 120 plants total were treated. Plants were fed once per week for 7 weeks (Environmental Data Initiative:  https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-hfr.109.18) # CITE THIS 
+
+b. We used open access data from the EDI Portal in an attempt to understand the overarching question: How do Sarracenia characteristics predict biomass? We selected the  following variables for the analysis:  chlorophyll (chlorophyll a + b content (mg/g) of youngest fully-expanded leaf produced by the plant), amass (mass-based light-saturated photosynthetic rate of youngest leaf (units: nmol CO2 • g-1 • s-1), sla (specific Leaf Area (cm2/g) of youngest fully-expanded leaf produced by the plant), num_phylls (number of phyllodes produced by each plant), num_lvs (total number of pitchers and phyllodes produced by each plant), totmass (total above- and below-ground plant biomass), species (species of pitcher plant used -- all Sarracenia), and feedlevel (grams of ground hymenoptera fed per week). We used a linear regression model to analyze the relationship between the above variables and biomass. 
+
+
+c. Visualize the missing data (see figure below): We are interested in looking at how the factors in each column affect total mass of the plants, and we are not yet sure how they will do so. We are not sure how the data was collected and cannot rectify the NAs by finding missing data in old records. Therefore, we drop the NA values to get the most accurate picture of their relationships. 
+```{r missing-data-visualization}
+missing_dat <- gg_miss_var(plant) + 
+              labs(caption = "There is missing data in 5 columns: cholorphyll, amass, sla, num_phylls, and num_lvs")
+missing_dat
+
+#get rid of the missing values from the above visualization 
+plant_subset <- plant|> 
+                drop_na(sla, chlorophyll, amass, num_lvs, num_phylls)
+#103 observations compared to the original 120 
+
+```
+
+
+d. Visualization of Pearson’s correlation between variables: This plot indicates that none of the investigated variables have a notably strong relationship, since all are < |0.7|. The strongest positive relationship is between sla () and amass and the strongest negative relastionship is between num_lvs and amass. 
+
+```{r correlation-plot}
+#plot to visually represent pearson's r between different variables in the dataset 
+
+#calculate pearson's r for numerical predictors only 
+plant_cor <- plant_subset |> 
+            #select only the numerical predictor variables 
+             select(feedlevel:num_phylls) |> 
+            #cor calculates various correlation metrics, pearsons, kendall, spearman --> we will use pearson 
+             cor(method = "pearson") #output is a correlation matrix, diagonal = variables compared to themselves, above and below is correlation with another variable 
+
+
+#creating a correlation plot 
+cor_plot <- corrplot(plant_cor, 
+        #change the shape of what is in the cells 
+        method = "ellipse", #right and left pointing represents whether relationship is positive or negative
+        #show coefficients and choose color for them 
+        addCoef.col = "black",
+        mar=c(1,1,2,1))
+title(main="title", sub="Numbers in black represent the correlation between overlapping variables in each box. The ellipses pointing to the right represent a positive relationship, while those to the left represent a negative relationship. Colors represent strength of the relationship along a spectrum")
+
+```
+
+
+
+
+
+e. Visualization of relationship between variables????
+```{r pairs-plot}
+#NOT SURE HOW TO DO CAPTION HERE ???
+
+plant_subset |> 
+      #select only the numerical predictor variables 
+       select(species:num_phylls) |> 
+       ggpairs() #lots of plots, pearson's coefficients 
+#this is usually part of exploratory analysis 
+#gives a sense of how the variables are related to each other 
+#USE ACTIVE VOICE WHEN EXPLANING 
+
+#see diagonal, top and bottom 
+#mostly, basic scatterplpot between two variables 
+#good way to get a visual first sense if there is a relationship between the two variables -- "sit and look at it" 
+
+
+```
+
+f. To determine how species and physiological characteristics predict biomass, we fit multiple linear models.The null model establishes predicted values by chance, rather than based on the variables we are interested in (there are not predictors in the model). In contrast, the full model establishes predicted values based off of each of the different variables we are interested in (has the response variable and all of the predictors). 
+```{r null-and-full-models}
+#write null model -- specify using "1" as predictor 
+null <- lm(totmass ~ 1, data = plant_subset)
+#specify full model with everything in it 
+full <- lm(totmass ~ species + feedlevel + sla + chlorophyll + amass + num_lvs + num_phylls, data = plant_subset)
+
+```
+
+g. We visually assessed normality and homoskedasticity of residuals using diagnostic plots for the FULL MODEL: These plots indicated that the residuals are not homoskedastic, since the points are clumped together towards the beginning of the line in both the residuals vs fitted and the scale-location plot. The Normal Q-Q plot shows some deviation from the line on both ends, but there are no outliers affecting the distribution, since there are no labeled points outside of the dotted lines. We found that the residuals are neither normally distributed nor homoskedastic using the Shapiro-Wilk test (null = variable of interest (i.e. the residuals) are normally distributed) and the Breusch-Pagan test (null = variable of interest (residuals) has constant variance).
+```{r full-diagnostics}
+#visualization for full model 
+par(mfrow = c(2,2))
+plot(full)
+
+#check for normality using the the Shapiro-Wilk test
+check_normality(full) 
+#check for homoscedasticity using the Breusch-Pagan test
+check_heteroscedasticity(full)
+
+```
+
+
+h. Since the full model did not show normally distributed and homoskedastic residuals, we tried transforming the data using log() in hope that the residuals will now meet these assumptions. In this case, we log transformed the response variable. 
+```{r model-logs}
+#tranform null model 
+null_log <- lm(log(totmass) ~ 1, data = plant_subset)
+
+#transform full model 
+full_log <- lm(log(totmass) ~ species + feedlevel + sla + chlorophyll + amass + num_lvs + num_phylls, data = plant_subset) #hope that residuals will now be normally dist
+
+#check assumptions visually 
+par(mfrow = c(2,2))
+plot(full_log) #plots look much better now 
+
+#check assumptions statistically 
+check_normality(full_log) #normal 
+check_heteroscedasticity(full_log) #homoskedastic
+```
+
+i. We chose three more models with different predictor variables to test. We chose species as the predictor for model2_log since we wanted to investigate whether species is the most reliable predictor of biomass for Sarracenia. We chose num_lvs, sla, chlorophyll, feedlevel, amass, and species  for model3_log because we wanted to simplify the inputs. According to the EDI metadata, num_lvs already includes the number of phylodes produced by each plant. We chose amass, chlorophyll, and feedlevel for model4_log to see if photosynthesis and nutrients are the main predictors of biomass -- and if the model would fit the assumptions if the other factors from model3_log were removed. Photosynthetic rate (amass) would affect biomass because plants accumulate biomass through photosynthesis, while chlorophyll is important since it is the pigment used for photosynthesis. Plants cannot grow well without access to nutrients, so it made sense to add feedlevel to the model. 
+
+```{r}
+#model 2_log 
+model2_log <- lm(log(totmass) ~ species, data = plant_subset)
+
+#check assumptions for model2_log: 
+#visually 
+par(mfrow = c(2,2))
+plot(model2_log)
+#statistically 
+check_normality(model2_log)
+check_heteroskedasticity(model2_log)
+
+#model3_log 
+model3_log <- lm(log(totmass) ~ num_lvs + sla + chlorophyll + feedlevel+ amass + species, data = plant_subset)
+#check assumptions: 
+#visually 
+par(mfrow = c(2,2))
+plot(model3_log) 
+#statistically 
+check_normality(model3_log) 
+check_heteroskedasticity(model3_log) 
+
+#model4_log 
+model4_log <- lm(log(totmass) ~ amass + chlorophyll + feedlevel, data = plant_subset)
+
+#check assumptions: 
+#visually 
+par(mfrow = c(2,2))
+plot(model4_log) 
+#statistically 
+check_normality(model4_log) 
+check_heteroskedasticity(model3_log) 
+
+```
+j. We evaluated multicollinearity for the FULL MODEL by calculating generalized variance inflation factors and determined that this model does not display evidence of collinearity since the GVIF plot shows values that are each less than 5. Therefore, it does not seem that collinearity is inflating the R2 for this model. ???
+```{r calculate-vif}
+#create table with GVIF values
+car::vif(full_log) 
+
+```
+k. We compared models using Akaike's Information Criterion(AIC) values. We chose to continue with the  model3_log since it resulted in the lowest score. 
+
+```{r}
+AICc(full_log)
+AICc(model2_log)
+AICc(null_log)
+AICc(model3_log) #this one has the lowest score 
+AICc(model4_log)
+```
+
+# 8.RESULTS 
+
+a. The best model is the model3_log which includes number of pitchers and phyllodes produced by each plant (num_lvs),  the area of the first leaf produced by a plant (sla), the chlorophyll a and b content of the first leaf (chlorophyll), amount of ground hymenoptera fed to each plant(feedlevel), photosynthetic rate (amass), and Sarracenia species as predictor variables. We wanted to test whether this combination would perform better than the full model without the redundant term num_phylls. We also wanted to see if this model would perform better than a model based on factors affecting growth rate (model4_log). We chose this model because it performed the best in terms of Akaike's Information Criterion(AIC) values. The model results are summarized in the table below: 
+```{r}
+summary(model3_log) #maybe try taking out the variables that were not significant! 
+```
+b. statistical interpretation The predictors in this model can be interpreted to influence Sarracenia biomass in a statistically significant way (p-value < 0.01). ???
+
+c. We created a visualization of model predictions using ggpredict. 
+
+```{r model-pred-visualization}
+#visualizations of model predictions 
+model_pred <- ggpredict(model3_log, terms = "num_lvs","sla", "chlorophyll", "feedlevel","amass", "species", back.transform = TRUE)
+
+model_pred
+#all else held constant (see values under Adjusted for section -- uses mean of the section) you would expect total biomass for each species to be (predicted) and report confidence interval 
+
+#look at this for all that have significant effect 
+
+plot(model_pred, add.data = TRUE) #plot that displays all predictions for species and total mass -- plotted along the original scales 
+#points are model estimates 
+#bars are ... ? 
+#jittered points are the original data
+
+plot(ggpredict(full_log, terms = "chlorophyll", back.transform = TRUE), add.data = TRUE) #ribbon is confidence interval around chlorophyll slope estimate 
+#back transformation takes the estimates from summary and calculates the estimate relative to the reference level, calc confidence interval using standard error and t value, then exponentiates all of that 
+#none of the predictors are back transformed 
+
+#when writing results: can say that model with log transformed response variable includes ___ ___ ___ ____. What we found is that there is a sig effect of ___ ___ ___ ____. THEN DECIDE WITH PREDICTOR YOU WANT TO HIGHLIGHT 
+#all else held constant, you would expect these ranges of total mass for each species....
+
+plot(ggpredict(full_log, terms = "feedlevel", back.transform = TRUE), add.data = TRUE)
+
+plot(ggpredict(full_log, terms = "sla", back.transform = TRUE), add.data = TRUE)
+
+#choose which figure represents the main takeaway of model...
+```
+
+d. This model indicates that ....... variables predict biomass of Sarracenia plants. For every increase or decrease of each variable, there is an associated increase or decrease in Sarracenia biomass. 
+
+# 9. BIBLIOGRAPHY 
+
+Adlassnig, Peroutka, M., & Lendl, T. (2011). Traps of carnivorous pitcher plants as a habitat: composition of the fluid, biodiversity and mutualistic activities. Annals of Botany, 107(2), 181–194. https://doi.org/10.1093/aob/mcq238
+
+Ellison, A. and E. Farnsworth. (2021). Effects of Prey Availability on Sarracenia Physiology at Harvard Forest 2005 ver 18. Environmental Data Initiative. https://doi.org/10.6073/pasta/26b22d09279e62fd729ffc35f9ef0174 (Accessed 2023-06-03).
+
+Huang, Chiang, W.-Y., Chen, P.-J., Lin, E.-S., & Huang, C.-Y. (2022). Anticancer and Antioxidant Activities of the Root Extract of the Carnivorous Pitcher Plant Sarracenia purpurea. Plants (Basel), 11(13), 1668–. https://doi.org/10.3390/plants11131668
+
+Farnsworth, & Ellison, A. M. (2008). Prey availability directly affects physiology, growth, nutrient allocation and scaling relationships among leaf traits in 10 carnivorous plant species. The Journal of Ecology, 96(1), 213–221. https://doi.org/10.1111/j.1365-2745.2007.01313.x
+
+
+
+
+
