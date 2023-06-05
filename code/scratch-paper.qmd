@@ -326,7 +326,7 @@ check_heteroskedasticity(model2_log)
 #also if the leaf area of the first leaf grown is higher, would make sense that the biomass would be related because the rest of the leaves would be bigger as well...? 
 #chlorophyll would mean more photosynthesis and more growth 
 
-model3_log <- lm(log(totmass) ~ num_lvs + sla + chlorophyll + feedlevel+ amass + species, data = plant_subset)
+model3_log <- lm(log(totmass) ~ num_lvs + sla + chlorophyll + amass + species, data = plant_subset)
 #check assumptions visually 
 #this works: num_lvs + sla + chlorophyll + feedlevel+ amass + species, data = plant_subset
 
@@ -337,6 +337,9 @@ plot(model3_log)
 check_normality(model3_log) #ok so residuals are not looking normal-- what do we do here 
 #but when I added sla it said it was heteroskedastic 
 check_heteroskedasticity(model3_log) 
+#tried taking out feedlevel, but got heteroskedastic 
+
+summary(model3_log)
 
 #photosynthesis and nutrients ===========================
 #amass = photosynthetic rate 
@@ -349,9 +352,15 @@ model4_log <- lm(log(totmass) ~ amass + chlorophyll + feedlevel, data = plant_su
 par(mfrow = c(2,2))
 plot(model4_log)
 
+
+model5_log <- lm(log(totmass) ~ feedlevel, data = plant_subset)
+
+par(mfrow = c(2,2))
+plot(model5_log)
+
 #check assumptions statistically 
-check_normality(model4_log) #ok does not look normal, but the plot looks chill -- not sure what to do here
-check_heteroskedasticity(model4_log)
+check_normality(model5_log) #ok does not look normal, but the plot looks chill -- not sure what to do here
+check_heteroskedasticity(model5_log)
 
 
 
@@ -378,4 +387,4 @@ MuMIn::model.sel(full_log, model2_log, null_log)#takes into account prob that wh
 #WE compared models using AIC and chose the model with the lowest value, which was...
 
 ```
-
+#citation: Ellison, A. and E. Farnsworth. 2021. Effects of Prey Availability on Sarracenia Physiology at Harvard Forest 2005 ver 18. Environmental Data Initiative. https://doi.org/10.6073/pasta/26b22d09279e62fd729ffc35f9ef0174 (Accessed 2023-06-03).
