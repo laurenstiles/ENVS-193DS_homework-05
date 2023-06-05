@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.189">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Lauren Stiles">
+<meta name="dcterms.date" content="2023-06-06">
+
+<title>ENVS 193DS Homework 5</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="Homework 5_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Homework 5_files/libs/quarto-html/quarto.js"></script>
+<script src="Homework 5_files/libs/quarto-html/popper.min.js"></script>
+<script src="Homework 5_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Homework 5_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Homework 5_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Homework 5_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Homework 5_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Homework 5_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Homework 5_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">6. INTRODUCTION</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">7. METHODS</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">8.RESULTS</a></li>
+  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">9. BIBLIOGRAPHY</a></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ENVS 193DS Homework 5</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lauren Stiles </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 6, 2023</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<p>link to repository: https://github.com/laurenstiles/ENVS-193DS_homework-05#envs-193ds_homework-05</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load libraries required for homework </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggeffects)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(performance)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar) <span class="co"># or equivalent</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flextable) <span class="co"># or equivalent</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AICcmodavg)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Read in data:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>plant <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"knb-lter-hfr.109.18 (1)"</span>, <span class="st">"hf109-01-sarracenia.csv"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>         <span class="co">#make column names cleaner</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>         <span class="fu">select</span>(totmass, species, feedlevel, sla, chlorophyll, amass, num_lvs, num_phylls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="introduction" class="level1">
+<h1>6. INTRODUCTION</h1>
+<p>Sarracenia, or carnivorous pitcher plants, are plants with specific anatomy that allows them to trap and digest insects (Adlassnig et al, 2011). These digested insects are important sources of nitrogen and phosphorus for carnivorous plants (Farnsworth &amp; Ellison, 2008). Sarracenia have cone shaped leaves from which it is difficult for an organism to remove itself once it has fallen in (Adlassnig et al, 2011). One interesting fact about Sarracenia is that a specific species called Sarracenia purpurea can be used to treat type 2 diabetes and illnesses like tuberculosis, with the potential to be used as an anti-cancer treatment (Huang et al, 2022). Therefore, many may be interested in Sarracenia research for its potential for development of life-saving drugs. In order to understand the relationships that help or hinder Sarracenia growth, it makes sense to research the morphological, physiological, or taxonomic characteristics that predict its biomass. For example, such research could advance the understanding of how to harness these plants for medicinal properties. In this document, we are addressing the question: How do Sarracenia characteristics predict biomass? The null hypothesis we are testing is that none of the characteristics predict biomass. The alternative hypothesis is that at least one of the variables predicts biomass.</p>
+</section>
+<section id="methods" class="level1">
+<h1>7. METHODS</h1>
+<ol type="a">
+<li><p>A variety of different species of Sarracenia were used in this study. Their amass (mass-based light-saturated photosynthetic rate of youngest leaf) and above ground size were measured before beginning treatements. Large species were fed 0-0.10 g of finely ground wasps, intermediate sized species were fed 0-0.5 g, and small species were fed 0-0.25 g. Two plants of each species were assigned to one of these feeding levels and 120 plants total were treated. Plants were fed once per week for 7 weeks (Ellison, A. and E. Farnsworth, 2021).</p></li>
+<li><p>We used open access data from the EDI Portal in an attempt to understand the overarching question: How do Sarracenia characteristics predict biomass? We selected the following variables for the analysis: chlorophyll (chlorophyll a + b content (mg/g) of youngest fully-expanded leaf produced by the plant), amass (mass-based light-saturated photosynthetic rate of youngest leaf (units: nmol CO2 • g-1 • s-1), sla (specific Leaf Area (cm2/g) of youngest fully-expanded leaf produced by the plant), num_phylls (number of phyllodes produced by each plant), num_lvs (total number of pitchers and phyllodes produced by each plant), totmass (total above- and below-ground plant biomass), species (species of pitcher plant used – all Sarracenia), and feedlevel (grams of ground hymenoptera fed per week). We used a multiple linear regression model to analyze the relationship between the above variables and biomass.</p></li>
+<li><p>Visualize the missing data (see figure below): We are interested in looking at how the factors in each column affect total mass of the plants, and we are not yet sure how they will do so. We are not sure how the data was collected and cannot rectify the NAs by finding missing data in old records. Therefore, we drop the NA values to get the most accurate picture of their relationships.</p></li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>missing_dat <span class="ot">&lt;-</span> <span class="fu">gg_miss_var</span>(plant) <span class="sc">+</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"There is missing data in 5 columns: cholorphyll, amass, sla, num_phylls, and num_lvs"</span>, <span class="at">hjust =</span> <span class="fl">0.1</span>) <span class="sc">+</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">theme</span>(<span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>missing_dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Homework-5_files/figure-html/missing-data-visualization-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#get rid of the missing values from the above visualization </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plant_subset <span class="ot">&lt;-</span> plant<span class="sc">|&gt;</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                <span class="fu">drop_na</span>(sla, chlorophyll, amass, num_lvs, num_phylls)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#103 observations compared to the original 120 </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="4" type="a">
+<li>Visualization of Pearson’s correlation between variables: This plot indicates that none of the investigated variables have a notably strong relationship, since all are &lt; |0.7|. The strongest positive relationship is between sla () and amass (0.32) and the strongest negative relastionship is between num_lvs and amass (-0.31).</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot to visually represent pearson's r between different variables in the dataset </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate pearson's r for numerical predictors only </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>plant_cor <span class="ot">&lt;-</span> plant_subset <span class="sc">|&gt;</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>            <span class="co">#select only the numerical predictor variables </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>             <span class="fu">select</span>(feedlevel<span class="sc">:</span>num_phylls) <span class="sc">|&gt;</span> </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>            <span class="co">#cor calculates various correlation metrics, pearsons, kendall, spearman --&gt; we will use pearson </span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>             <span class="fu">cor</span>(<span class="at">method =</span> <span class="st">"pearson"</span>) <span class="co">#output is a correlation matrix, diagonal = variables compared to themselves, above and below is correlation with another variable </span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#creating a correlation plot </span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(plant_cor, </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">#change the shape of what is in the cells </span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">method =</span> <span class="st">"ellipse"</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">#right and left pointing represents whether relationship is positive or negative</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="co">#show coefficients and choose color for them </span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">addCoef.col =</span> <span class="st">"black"</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">mar=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">7</span>))  </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="at">sub =</span> <span class="st">"Numbers in black represent the correlation value between overlapping variables columns in each box. The ellipses pointing to the right represent a positive relationship, while those to the left represent a negative relationship. Colors represent strength of the relationship along a spectrum."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Homework-5_files/figure-html/correlation-plot-1.png" class="img-fluid" width="2400"></p>
+</div>
+</div>
+<ol start="5" type="a">
+<li>Visualization of relationship between variables: We explored the relationship between variables using ggpairs(). The correlation between variables are all &lt; |0.7|, suggesting that they do not have very strong relationships and supporting the results from the Pearson’s correlation plot. The density plots (the diagonal) for each variable indicated that most of the data is right skewed (except for species because it is categorical) and the scatterplots show clustering on the bottom left of most graphs. The histograms and boxplots indicate that there is variation in predictor values between different species .</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plant_subset <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>      <span class="co">#select only the numerical predictor variables </span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">select</span>(species<span class="sc">:</span>num_phylls) <span class="sc">|&gt;</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ggpairs</span>(<span class="at">title =</span> <span class="st">"This graph shows correlation between variables in the model and displays visual representations of their relationship"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Homework-5_files/figure-html/pairs-plot-1.png" class="img-fluid" width="1440"></p>
+</div>
+</div>
+<ol start="6" type="a">
+<li>To determine how species and physiological characteristics predict biomass, we fit multiple linear models.The null model establishes predicted values by chance, rather than based on the variables we are interested in (there are not predictors in the model). In contrast, the full model establishes predicted values based off of each of the different variables we are interested in (has the response variable and all of the predictors).</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#write null model -- specify using "1" as predictor </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>null <span class="ot">&lt;-</span> <span class="fu">lm</span>(totmass <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> plant_subset)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#specify full model with everything in it </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>full <span class="ot">&lt;-</span> <span class="fu">lm</span>(totmass <span class="sc">~</span> species <span class="sc">+</span> feedlevel <span class="sc">+</span> sla <span class="sc">+</span> chlorophyll <span class="sc">+</span> amass <span class="sc">+</span> num_lvs <span class="sc">+</span> num_phylls, <span class="at">data =</span> plant_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="7" type="a">
+<li>We visually assessed normality and homoskedasticity of residuals using diagnostic plots for the FULL MODEL: These plots indicated that the residuals are not homoskedastic, since the points are clumped together towards the beginning of the line in both the residuals vs fitted and the scale-location plot. The Normal Q-Q plot shows some deviation from the line on both ends, but there are no outliers affecting the distribution, since there are no labeled points outside of the dotted lines. We found that the residuals are neither normally distributed nor homoskedastic using the Shapiro-Wilk test (null = variable of interest (i.e.&nbsp;the residuals) are normally distributed) and the Breusch-Pagan test (null = variable of interest (residuals) has constant variance).</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#visualization for full model </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Homework-5_files/figure-html/full-diagnostics-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check for normality using the the Shapiro-Wilk test</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">check_normality</span>(full) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Non-normality of residuals detected (p &lt; .001).</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check for homoscedasticity using the Breusch-Pagan test</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">check_heteroscedasticity</span>(full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Heteroscedasticity (non-constant error variance) detected (p &lt; .001).</code></pre>
+</div>
+</div>
+<ol start="8" type="a">
+<li>Since the full model did not show normally distributed and homoskedastic residuals, we tried transforming the data using log() in hope that the residuals will now meet these assumptions. In this case, we log transformed the response variable.</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#tranform null model </span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>null_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(totmass) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> plant_subset)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#transform full model </span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>full_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(totmass) <span class="sc">~</span> species <span class="sc">+</span> feedlevel <span class="sc">+</span> sla <span class="sc">+</span> chlorophyll <span class="sc">+</span> amass <span class="sc">+</span> num_lvs <span class="sc">+</span> num_phylls, <span class="at">data =</span> plant_subset) <span class="co">#hope that residuals will now be normally dist</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#check assumptions visually </span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(full_log) <span class="co">#plots look much better now </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Homework-5_files/figure-html/model-logs-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check assumptions statistically </span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">check_normality</span>(full_log) <span class="co">#normal </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>OK: residuals appear as normally distributed (p = 0.107).</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_heteroscedasticity</span>(full_log) <span class="co">#homoskedastic</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>OK: Error variance appears to be homoscedastic (p = 0.071).</code></pre>
+</div>
+</div>
+<ol type="i">
+<li>We chose three more models with different predictor variables to test. We chose species as the predictor for model2_log since we wanted to investigate whether species is the most reliable predictor of biomass for Sarracenia. We found that this model fits the assumptions normal and homoskedastic residuals both visually and statistically. We chose num_lvs, sla, chlorophyll, feedlevel, amass, and species for model3_log because we wanted to simplify the inputs compared to the full model. According to the EDI metadata, num_lvs already includes the number of phyllodes produced by each plant. We also found that this model fits the assumptions normal and homoskedastic residuals both visually and statistically. We chose amass, chlorophyll, and feedlevel for model4_log to see if photosynthesis and nutrients are the main predictors of biomass – and if the model would fit the assumptions if the other predictors from model3_log were removed. Photosynthetic rate (amass) would affect biomass because plants accumulate biomass through photosynthesis, while chlorophyll is important since it is the pigment used for photosynthesis. Plants cannot grow well without access to nutrients, so it made sense to add feedlevel as a predictor the model. We found that this model resulted in residual non-normality and heteroskedasticity.</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model 2_log </span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>model2_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(totmass) <span class="sc">~</span> species, <span class="at">data =</span> plant_subset)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#check assumptions for model2_log: </span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#visually </span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model2_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Homework-5_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#statistically </span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">check_normality</span>(model2_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>OK: residuals appear as normally distributed (p = 0.374).</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_heteroskedasticity</span>(model2_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>OK: Error variance appears to be homoscedastic (p = 0.100).</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model3_log </span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>model3_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(totmass) <span class="sc">~</span> num_lvs <span class="sc">+</span> sla <span class="sc">+</span> chlorophyll <span class="sc">+</span> feedlevel<span class="sc">+</span> amass <span class="sc">+</span> species, <span class="at">data =</span> plant_subset)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#check assumptions: </span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">#visually </span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model3_log) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Homework-5_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#statistically </span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">check_normality</span>(model3_log) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>OK: residuals appear as normally distributed (p = 0.100).</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_heteroskedasticity</span>(model3_log) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>OK: Error variance appears to be homoscedastic (p = 0.086).</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model4_log </span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>model4_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(totmass) <span class="sc">~</span> amass <span class="sc">+</span> chlorophyll <span class="sc">+</span> feedlevel, <span class="at">data =</span> plant_subset)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">#check assumptions: </span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">#visually </span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model4_log) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Homework-5_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#statistically </span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">check_normality</span>(model4_log) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Non-normality of residuals detected (p = 0.023).</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_heteroskedasticity</span>(model3_log) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>OK: Error variance appears to be homoscedastic (p = 0.086).</code></pre>
+</div>
+</div>
+<ol start="10" type="a">
+<li>We evaluated multicollinearity for the FULL MODEL by calculating generalized variance inflation factors and determined that this model does not display evidence of collinearity since the GVIF plot shows values that are each less than 5. Therefore, it does not seem that collinearity is inflating the R2 for this model.</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create table with GVIF values</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">vif</span>(full_log) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 GVIF Df GVIF^(1/(2*Df))
+species     42.351675  9        1.231351
+feedlevel    1.621993  1        1.273575
+sla          1.999989  1        1.414210
+chlorophyll  1.949828  1        1.396362
+amass        2.872084  1        1.694722
+num_lvs      2.813855  1        1.677455
+num_phylls   2.995510  1        1.730754</code></pre>
+</div>
+</div>
+<ol start="11" type="a">
+<li>We compared models using Akaike’s Information Criterion(AIC) values. We chose to continue with the model3_log since it resulted in the lowest score.</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AICc</span>(full_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 133.9424</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AICc</span>(model2_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 157.5751</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AICc</span>(null_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 306.0028</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AICc</span>(model3_log) <span class="co">#this one has the lowest score </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 131.7593</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AICc</span>(model4_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 298.5756</code></pre>
+</div>
+</div>
+</section>
+<section id="results" class="level1">
+<h1>8.RESULTS</h1>
+<ol type="a">
+<li>The best model is the model3_log which includes number of pitchers and phyllodes produced by each plant (num_lvs), the area of the first leaf produced by a plant (sla), the chlorophyll a and b content of the first leaf (chlorophyll), amount of ground hymenoptera fed to each plant(feedlevel), photosynthetic rate (amass), and Sarracenia species as predictor variables. We wanted to test whether this combination would perform better than the full model without the redundant term num_phylls. We also wanted to see if this model would perform better than a model based on factors affecting growth rate (model4_log). We chose this model because it performed the best in terms of Akaike’s Information Criterion(AIC) values. This model also adhered to assumptions of normally distributed and homoskedastic residuals.The model results are summarized in the table below:</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model3_log) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(totmass) ~ num_lvs + sla + chlorophyll + feedlevel + 
+    amass + species, data = plant_subset)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.89509 -0.20458  0.03063  0.25164  0.81335 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)        -1.318539   0.595720  -2.213 0.029460 *  
+num_lvs             0.084827   0.020452   4.148 7.72e-05 ***
+sla                -0.002448   0.001156  -2.117 0.037054 *  
+chlorophyll         0.004421   0.001185   3.732 0.000336 ***
+feedlevel          -0.459276   0.233124  -1.970 0.051973 .  
+amass               0.002126   0.002968   0.716 0.475709    
+speciesalata        1.111378   0.183573   6.054 3.39e-08 ***
+speciesflava        1.274871   0.200622   6.355 8.97e-09 ***
+speciesjonesii      0.316519   0.195921   1.616 0.109773    
+speciesleucophylla  1.662071   0.218667   7.601 3.00e-11 ***
+speciesminor        0.382609   0.187257   2.043 0.044021 *  
+speciespsittacina  -1.610640   0.201576  -7.990 4.85e-12 ***
+speciespurpurea    -0.393995   0.250822  -1.571 0.119814    
+speciesrosea       -0.970516   0.258127  -3.760 0.000306 ***
+speciesrubra        0.870384   0.195792   4.445 2.55e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.412 on 88 degrees of freedom
+Multiple R-squared:  0.8678,    Adjusted R-squared:  0.8468 
+F-statistic: 41.28 on 14 and 88 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<ol start="2" type="a">
+<li><p>The combination of predictors in this model can be interpreted to influence Sarracenia biomass in a statistically significant way (p-value &lt; 0.01). The R-squared for this model is 0.87, which indicates that this model explains about 87 percent of the variability in the data. Degrees of freedom is 88, meaning that there are this many points of control in the model.</p></li>
+<li><p>We created a visualization of model predictions using ggpredict. We chose to visualize the relationship between chlorophyll and biomass, since it is a significant predictor of Sarracenia total biomass. Based on this plot, there is a positive relationship between these two variables, though the confidence interval increases with chlorophyll concentration.</p></li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">#visualizations of model predictions </span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>chlor_plot <span class="ot">&lt;-</span> <span class="fu">plot</span>(<span class="fu">ggpredict</span>(model3_log, <span class="at">terms =</span> <span class="st">"chlorophyll"</span>, <span class="at">back.transform =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">add.data =</span> <span class="cn">TRUE</span>)  <span class="co">#ribbon is confidence interval around chlorophyll slope  </span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>chlor_plot                    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Homework-5_files/figure-html/model-pred-visualization-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="4" type="a">
+<li>The best model indicates that the following variables predict biomass of Sarracenia plant: number of pitchers and phyllodes produced by each plant (num_lvs), the area of the first leaf produced by a plant (sla), the chlorophyll a and b content of the first leaf (chlorophyll), amount of ground hymenoptera fed to each plant(feedlevel), photosynthetic rate (amass), and Sarracenia species. All else held constant, for every increase or decrease of each variable, there is an associated increase or decrease in Sarracenia biomass. The coefficient for each describes how each variable is related to biomass by describing the slope of their linear relationship.</li>
+</ol>
+</section>
+<section id="bibliography" class="level1">
+<h1>9. BIBLIOGRAPHY</h1>
+<p>Adlassnig, Peroutka, M., &amp; Lendl, T. (2011). Traps of carnivorous pitcher plants as a habitat: composition of the fluid, biodiversity and mutualistic activities. Annals of Botany, 107(2), 181–194. https://doi.org/10.1093/aob/mcq238</p>
+<p>Ellison, A. and E. Farnsworth. (2021). Effects of Prey Availability on Sarracenia Physiology at Harvard Forest 2005 ver 18. Environmental Data Initiative. https://doi.org/10.6073/pasta/26b22d09279e62fd729ffc35f9ef0174 (Accessed 2023-06-03).</p>
+<p>Huang, Chiang, W.-Y., Chen, P.-J., Lin, E.-S., &amp; Huang, C.-Y. (2022). Anticancer and Antioxidant Activities of the Root Extract of the Carnivorous Pitcher Plant Sarracenia purpurea. Plants (Basel), 11(13), 1668–. https://doi.org/10.3390/plants11131668</p>
+<p>Farnsworth, &amp; Ellison, A. M. (2008). Prey availability directly affects physiology, growth, nutrient allocation and scaling relationships among leaf traits in 10 carnivorous plant species. The Journal of Ecology, 96(1), 213–221. https://doi.org/10.1111/j.1365-2745.2007.01313.x</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

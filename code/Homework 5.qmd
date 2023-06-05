@@ -46,7 +46,7 @@ plant <- read_csv(here("data", "knb-lter-hfr.109.18 (1)", "hf109-01-sarracenia.c
 Sarracenia, or carnivorous pitcher plants, are plants with specific anatomy that allows them to trap and digest insects (Adlassnig et al, 2011). These digested insects are important sources of nitrogen and phosphorus for carnivorous plants (Farnsworth & Ellison, 2008). Sarracenia have cone shaped leaves from which it is difficult for an organism to remove itself once it has fallen in (Adlassnig et al, 2011). One interesting fact about Sarracenia is that a specific species called Sarracenia purpurea can be used to treat type 2 diabetes and illnesses like tuberculosis, with the potential to be used as an anti-cancer treatment (Huang et al, 2022). Therefore, many may be interested in Sarracenia research for its potential for development of life-saving drugs. In order to understand the relationships that help or hinder Sarracenia growth, it makes sense to research the morphological, physiological, or taxonomic characteristics that predict its biomass. For example, such research could advance the understanding of how to harness these plants for medicinal properties. In this document, we are addressing the question: How do Sarracenia characteristics predict biomass? The null hypothesis we are testing is that none of the characteristics predict biomass. The alternative hypothesis is that at least one of the variables predicts biomass.
 
 # 7. METHODS 
-a. A variety of different species of Sarracenia were used in this study. Their amass (mass-based light-saturated photosynthetic rate of youngest leaf) and above ground size were measured before beginning treatements. Large species were fed 0-0.10 g of finely ground wasps, intermediate sized species were fed 0-0.5 g, and small species were fed 0-0.25 g. Two plants of each species were assigned to one of these feeding levels and 120 plants total were treated. Plants were fed once per week for 7 weeks (Environmental Data Initiative:  https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-hfr.109.18) # CITE THIS 
+a. A variety of different species of Sarracenia were used in this study. Their amass (mass-based light-saturated photosynthetic rate of youngest leaf) and above ground size were measured before beginning treatements. Large species were fed 0-0.10 g of finely ground wasps, intermediate sized species were fed 0-0.5 g, and small species were fed 0-0.25 g. Two plants of each species were assigned to one of these feeding levels and 120 plants total were treated. Plants were fed once per week for 7 weeks (Ellison, A. and E. Farnsworth, 2021). 
 
 b. We used open access data from the EDI Portal in an attempt to understand the overarching question: How do Sarracenia characteristics predict biomass? We selected the  following variables for the analysis:  chlorophyll (chlorophyll a + b content (mg/g) of youngest fully-expanded leaf produced by the plant), amass (mass-based light-saturated photosynthetic rate of youngest leaf (units: nmol CO2 • g-1 • s-1), sla (specific Leaf Area (cm2/g) of youngest fully-expanded leaf produced by the plant), num_phylls (number of phyllodes produced by each plant), num_lvs (total number of pitchers and phyllodes produced by each plant), totmass (total above- and below-ground plant biomass), species (species of pitcher plant used -- all Sarracenia), and feedlevel (grams of ground hymenoptera fed per week). We used a multiple linear regression model to analyze the relationship between the above variables and biomass. 
 
@@ -68,7 +68,7 @@ plant_subset <- plant|>
 
 d. Visualization of Pearson’s correlation between variables: This plot indicates that none of the investigated variables have a notably strong relationship, since all are < |0.7|. The strongest positive relationship is between sla () and amass (0.32) and the strongest negative relastionship is between num_lvs and amass (-0.31). 
 
-```{r correlation-plot, fig.height = 8, fig.width = 15}
+```{r correlation-plot, fig.height = 8, fig.width = 25}
 #plot to visually represent pearson's r between different variables in the dataset 
 
 #calculate pearson's r for numerical predictors only 
@@ -113,7 +113,7 @@ full <- lm(totmass ~ species + feedlevel + sla + chlorophyll + amass + num_lvs +
 ```
 
 g. We visually assessed normality and homoskedasticity of residuals using diagnostic plots for the FULL MODEL: These plots indicated that the residuals are not homoskedastic, since the points are clumped together towards the beginning of the line in both the residuals vs fitted and the scale-location plot. The Normal Q-Q plot shows some deviation from the line on both ends, but there are no outliers affecting the distribution, since there are no labeled points outside of the dotted lines. We found that the residuals are neither normally distributed nor homoskedastic using the Shapiro-Wilk test (null = variable of interest (i.e. the residuals) are normally distributed) and the Breusch-Pagan test (null = variable of interest (residuals) has constant variance).
-```{r full-diagnostics}
+```{r full-diagnostics, message = FALSE, warning = FALSE}
 #visualization for full model 
 par(mfrow = c(2,2))
 plot(full)
@@ -127,7 +127,7 @@ check_heteroscedasticity(full)
 
 
 h. Since the full model did not show normally distributed and homoskedastic residuals, we tried transforming the data using log() in hope that the residuals will now meet these assumptions. In this case, we log transformed the response variable. 
-```{r model-logs}
+```{r model-logs, message = FALSE, warning = FALSE}
 #tranform null model 
 null_log <- lm(log(totmass) ~ 1, data = plant_subset)
 
@@ -145,7 +145,7 @@ check_heteroscedasticity(full_log) #homoskedastic
 
 i. We chose three more models with different predictor variables to test. We chose species as the predictor for model2_log since we wanted to investigate whether species is the most reliable predictor of biomass for Sarracenia. We found that this model fits the assumptions normal and homoskedastic residuals both visually and statistically.  We chose num_lvs, sla, chlorophyll, feedlevel, amass, and species  for model3_log because we wanted to simplify the inputs compared to the full model. According to the EDI metadata, num_lvs already includes the number of phyllodes produced by each plant. We also found that this model fits the assumptions normal and homoskedastic residuals both visually and statistically. We chose amass, chlorophyll, and feedlevel for model4_log to see if photosynthesis and nutrients are the main predictors of biomass -- and if the model would fit the assumptions if the other predictors from model3_log were removed. Photosynthetic rate (amass) would affect biomass because plants accumulate biomass through photosynthesis, while chlorophyll is important since it is the pigment used for photosynthesis. Plants cannot grow well without access to nutrients, so it made sense to add feedlevel as a predictor the model. We found that this model resulted in residual non-normality and heteroskedasticity. 
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 #model 2_log 
 model2_log <- lm(log(totmass) ~ species, data = plant_subset)
 
